@@ -10,7 +10,7 @@ Em sudoku.py:
 Em solucionador.py:
 A classe **Board** representa o estado do tabuleiro do Sudoku em uma determinada etapa do algoritmo de solução. É uma lista bidimensional.
 
-**possible_vals**é  uma lista bidimensional que armazena os possíveis valores para cada célula do tabuleiro do Sudoku durante o processo de resolução.
+**possible_vals** é  uma lista bidimensional que armazena os possíveis valores para cada célula do tabuleiro do Sudoku durante o processo de resolução.
 
 Também foram usadas filas de prioridade (PriorityQueue), conjuntos (set), e operações com bits para manipulação de bits para controle de visitas e fila de prioridade para próximas jogadas.
 
