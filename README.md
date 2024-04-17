@@ -12,7 +12,7 @@ A classe **Board** representa o estado do tabuleiro do Sudoku em uma determinada
 
 **possible_vals**é  uma lista bidimensional que armazena os possíveis valores para cada célula do tabuleiro do Sudoku durante o processo de resolução.
 
-Também fora usadas filas de prioridade (PriorityQueue), conjuntos (set), e operações com bits para manipulação de bits. Usadas para controle de visitas, fila de prioridade para próximas jogadas, entre outros.
+Também foram usadas filas de prioridade (PriorityQueue), conjuntos (set), e operações com bits para manipulação de bits para controle de visitas e fila de prioridade para próximas jogadas.
 
 Utilizamos o gerador de jogos do [Leonardo Nunes Armelim](https://github.com/Leonardo-Nunes-Armelim/Bytes_Universe/tree/main/Python/004_Sudoku) para a nossa base do jogo e o código A* do [Will Roever](https://github.com/wroever/sudoku-solver/blob/master/solver.py) adaptando ambos com algumas modificações para se adequar ao escopo da disciplina e se complementarem.
 
