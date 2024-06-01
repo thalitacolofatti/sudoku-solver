@@ -22,13 +22,13 @@ A versão final foi adaptada usando classes (encapsulamento) para simplificar o 
 
 ### astar.py
 
-**Estrutura de Dados**: 
+**Estrutura de Dados presentes**: 
  - **Lista de Listas (matriz)** para representação do tabuleiro (com cada lista interna representando uma linha do tabuleiro) e seus estados; 
  - **Tuplas** para atribuir as coordenadas das células vazias (linha, coluna);
  - **Fila de prioridade** implementada com a biblioteca `heapq` para gerenciar os estados do tabuleiro com base na heurística (priorizando o menor valor);
  - **Conjunto (`set()`)**  para rastrear as tentativas já visitadas e evitar reprocessamento.
 
-**Soluções**:
+**Soluções presentes**:
 
 1. **Heurística ou busca informada**: A função heurística (`heuristic`) calcula a heurística de um tabuleiro, que nesse caso é o número de células vazias. Esta função guia a busca A* priorizando estados com menos células vazias.
 2. **Fila de Prioridade (`heapq`)**: Os estados do tabuleiro são armazenados em uma fila de prioridade (`queue`), onde estados com menor valor heurístico são processados primeiro.
@@ -39,9 +39,9 @@ A versão final foi adaptada usando classes (encapsulamento) para simplificar o 
 
 ### backtracking.py
 
-**Estrutura de Dados**: Lista de Listas (matriz) para representação do tabuleiro e tuplas para armazenar as coordenadas das células vazias (linha, coluna).
+**Estrutura de Dados presentes**: Lista de Listas (matriz) para representação do tabuleiro e tuplas para armazenar as coordenadas das células vazias (linha, coluna).
 
-**Soluções**:
+**Soluções presentes**:
 
 1. **Escolha**: O algoritmo tenta colocar um número em uma célula vazia.
 2. **Restrições**: Verifica se a inserção do número é válida conforme as regras do Sudoku.
