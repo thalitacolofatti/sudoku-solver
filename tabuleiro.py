@@ -1,7 +1,6 @@
 from random import sample, randint
 from selection import SelectNumber, SelectGame
 from copy import deepcopy
-# from solverAstar import Solver, BoardState
 from astar import SolverAStar
 from backtracking import Backtracking
 import time
@@ -24,14 +23,22 @@ def create_line_coordinates(cell_size: int) -> list[list[tuple]]:
         points.append(temp)
     return points
 
-#pedir para o gpt explicar
 SUB_GRID_SIZE = 3
 GRID_SIZE = SUB_GRID_SIZE * SUB_GRID_SIZE
 
 def pattern(row_num: int, col_num:int) -> int:
+    """ 
+        Calcula um padrão que é usado para distribuir os números pelo tabuleiro de forma que satisfaça as regras do Sudoku. 
+        row_num % SUB_GRID_SIZE pega o índice dentro da subgrade atual.
+        row_num // SUB_GRID_SIZE calcula em qual subgrade (na horizontal) está.
+        col_num é o índice da coluna atual.
+        SUB_GRID_SIZE * (row_num % SUB_GRID_SIZE) + row_num // SUB_GRID_SIZE + col_num combina essas informações para gerar uma posição na grade.
+        GRID_SIZE (% GRID_SIZE) garante que a posição esteja dentro dos limites do tabuleiro (0 a 8 para um Sudoku 9x9).
+    """
     return (SUB_GRID_SIZE * (row_num % SUB_GRID_SIZE) + row_num // SUB_GRID_SIZE + col_num) % GRID_SIZE
 
 def shuffle(samp: range) -> list:
+    """ Usa a função sample do módulo random para retornar uma lista embaralhada de uma sequência fornecida (samp) """
     return sample(samp, len(samp))
 
 def create_grid(sub_grid: int) -> list[list]:
@@ -41,8 +48,6 @@ def create_grid(sub_grid: int) -> list[list]:
     cols = [g * sub_grid + c for g in shuffle(row_base) for c in shuffle(row_base)]
     nums = shuffle(range(1, sub_grid * sub_grid + 1))
     return [[nums[pattern(r, c)] for c in cols] for r in rows]
-
-# fim do pedido
 
 def remove_numbers(grid: list[list]):
     """ Transforma números em zero aleatoriamente no tabuleiro """
@@ -54,13 +59,6 @@ def remove_numbers(grid: list[list]):
         grid[i // GRID_SIZE][i % GRID_SIZE] = 0
 
     return divisor, filled
-
-# def sudoku_solver_a_star(grid_to_solve):
-#     start = BoardState(grid_to_solve)
-#     solverstar = Solver(start)
-#     solution = solverstar.solve()
-#     solverstar.validate_solution(solution)
-#     return solution
 
 class Grid:
     def __init__(self, pygame, font):

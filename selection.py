@@ -108,12 +108,6 @@ class SelectGame:
                 return btn_clicked
 
     
-    # def button_hover(self, pos: tuple) -> bool:
-    #     # verifica se o mouse está passando por cima de um botão
-    #     mouse_pos = self.pygame.mouse.get_pos()
-    #     if self.on_button(mouse_pos[0], mouse_pos[1], pos):
-    #         return True
-
     def on_button(self, mouse_x: int, mouse_y: int, pos: tuple) -> bool:
         # verifica se o ponteiro do mouse está dentro da área de um botão 
         return pos[0] < mouse_x < pos [0] + self.btn_w and pos[1] < mouse_y < pos[1] + self.btn_h
