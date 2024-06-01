@@ -1,7 +1,9 @@
 import pygame as pg
 import random
 import math
+import time
 from solverAstar import Solver, BoardState
+# from randomBoard import
 
 # Cores
 preto = (0, 0, 0)
@@ -13,12 +15,13 @@ branco = (255, 255, 255)
 cinza = (237, 237, 237)
 
 # Setup da tela do Jogo
-window = pg.display.set_mode((1000, 700))
+window = pg.display.set_mode((1000, 800))
 
 # Inicializando fonte
 pg.font.init()
 # Escolhendo uma fonte e tamanho
 fonte = pg.font.SysFont("Roboto", 50, bold=True)
+fontep = pg.font.SysFont("Roboto", 34, bold=True)
 
 tabuleiro_data = [['n', 'n', 'n', 'n', 'n', 'n', 'n', 'n', 'n'],
                   ['n', 'n', 'n', 'n', 'n', 'n', 'n', 'n', 'n'],
@@ -52,7 +55,7 @@ def Tabuleiro_Hover(window, mouse_position_x, mouse_position_y):
     ajuste = 50
     x = (math.ceil((mouse_position_x - ajuste) / quadrado) - 1)
     y = (math.ceil((mouse_position_y - ajuste) / quadrado) - 1)
-    pg.draw.rect(window, branco, (0, 0, 1000, 700))
+    pg.draw.rect(window, branco, (0, 0, 1000, 800))
     if x >= 0 and x <= 8 and y >= 0 and y <= 8:
         pg.draw.rect(window, lilas_claro, ((ajuste + x * quadrado, ajuste + y * quadrado, quadrado, quadrado)))
 
@@ -79,13 +82,19 @@ def Tabuleiro(window):
 
 def Button_Random(window):
     pg.draw.rect(window, verde, (700, 50, 250, 100))
-    palavra_f = fonte.render('Random', True, preto)
-    window.blit(palavra_f, (730, 75))
+    palavra_f = fontep.render('Jogo Aleatório', True, preto)
+    window.blit(palavra_f, (715, 80))
 
-def Button_AI_Solver(window):
-    pg.draw.rect(window, lilas, (700, 200, 250, 100))
-    palavra_f = fonte.render('AI Solver', True, preto)
-    window.blit(palavra_f, (725, 225))
+# blank
+def Button_Blank_Board(window):
+    pg.draw.rect(window, cinza, (700, 200, 250, 100))
+    palavra_f = fontep.render('Tabuleiro Vazio', True, preto)
+    window.blit(palavra_f, (710, 230))
+
+def Button_Astar_Solver(window):
+    pg.draw.rect(window, lilas, (700, 350, 250, 100))
+    palavra_f = fontep.render('Solução A*', True, preto)
+    window.blit(palavra_f, (735, 380))
 
 def Linha_Escolhida(tabuleiro_data, y):
     linha_sorteada = tabuleiro_data[y]
@@ -220,9 +229,24 @@ def Gabarito_do_Tabuleiro(tabuleiro_data, tabuleiro_preenchido):
             tabuleiro_preenchido = False
     return tabuleiro_data, tabuleiro_preenchido
 
+# blank
+# def Tabuleiro_Blank(tabuleiro_data):
+#     #Inicializa o tabuleiro com zeros.
+#     for i in range(9):
+#         for j in range(9):
+#             tabuleiro_data[i][j] = 'n'
+#     return tabuleiro_data
+
+# def Criar_tabuleiro_vazio():
+#     #Cria um novo tabuleiro vazio.
+#     tabuleiro_data = [[0 for _ in range(9)] for _ in range(9)]
+#     return tabuleiro_data
+
 def Escondendo_Numeros(tabuleiro_data, jogo_data, escondendo_numeros):
     if escondendo_numeros == True:
-        for n in range(40):
+        numeros_aparentes = random.randint(25,54)
+        print("Quantidade de números aparentes: ", numeros_aparentes )
+        for n in range(numeros_aparentes):
             sorteando_numero = True
             while sorteando_numero == True:
                 x = random.randint(0, 8)
@@ -257,16 +281,46 @@ def Checando_Numero_Digitado(window, tabuleiro_data, jogo_data, click_position_x
     y = click_position_y
     if x >= 0 and x <= 8 and y >= 0 and y <= 8 and tabuleiro_data[y][x] == numero and jogo_data[y][x] == 'n' and numero != 0:
         jogo_data[y][x] = numero
+        print("Tabuleiro Check1 teste: ", tabuleiro_data)
+        print("Jogo Check1: ", jogo_data)
+        print("X Check1: ", x)
+        print("Y Check1: ", y)
+        print("numero Check1: ", numero)
         numero = 0
     if x >= 0 and x <= 8 and y >= 0 and y <= 8 and tabuleiro_data[y][x] == numero and jogo_data[y][x] == numero and numero != 0:
+        print("pass")
         pass
     if x >= 0 and x <= 8 and y >= 0 and y <= 8 and tabuleiro_data[y][x] != numero and jogo_data[y][x] == 'n' and numero != 0:
         jogo_data[y][x] = 'X'
+        print("Tabuleiro Check3 teste: ", tabuleiro_data)
+        print("Jogo Check3: ", jogo_data)
+        print("X Check3: ", x)
+        print("Y Check3: ", y)
+        print("numero Check3: ", numero)
         numero = 0
     if x >= 0 and x <= 8 and y >= 0 and y <= 8 and tabuleiro_data[y][x] == numero and jogo_data[y][x] == 'X' and numero != 0:
         jogo_data[y][x] = numero
+        print("Tabuleiro Check4 teste: ", tabuleiro_data)
+        print("Jogo Check4: ", jogo_data)
+        print("X Check4: ", x)
+        print("Y Check4: ", y)
+        print("numero Check4: ", numero)
         numero = 0
     return jogo_data, numero
+
+# blank
+# def Numero_Digitado(window, tabuleiro_data, jogo_data, click_position_x, click_position_y, numero):
+#     x = click_position_x
+#     y = click_position_y
+#     if x >= 0 and x <= 8 and y >= 0 and y <= 8 and tabuleiro_data[y][x] != numero and jogo_data[y][x] == 'n' and numero != 0:
+#         jogo_data[y][x] = numero
+#         print("Tabuleiro Checkout teste: ", tabuleiro_data)
+#         print("Jogo Checkout: ", jogo_data)
+#         print("X Checkout: ", x)
+#         print("Y Checkout: ", y)
+#         print("numero Checkout: ", numero)
+#         numero = 0
+#     return jogo_data, numero
 
 def Copiar_Tabuleiro_Com_Numeros_Escondidos(tabuleiro_data, jogo_data):
     copia_tabuleiro = []
@@ -280,11 +334,12 @@ def Copiar_Tabuleiro_Com_Numeros_Escondidos(tabuleiro_data, jogo_data):
         copia_tabuleiro.append(linha)
     return copia_tabuleiro
 
-def Sudoku_Solver(copia_tabuleiro):
+def Sudoku_SolverAstar(copia_tabuleiro):
     start = BoardState(copia_tabuleiro)
     solver = Solver(start)
     solution = solver.solve()
     solver.validate_solution(solution)
+    print(solution)
     return solution
 
 def Click_Button_Random(mouse_position_x, mouse_position_y, click_last_status, click, tabuleiro_preenchido, escondendo_numeros, tabuleiro_data, jogo_data):
@@ -297,31 +352,58 @@ def Click_Button_Random(mouse_position_x, mouse_position_y, click_last_status, c
         jogo_data = Reiniciando_Tabuleiro_Data(jogo_data)
     return tabuleiro_preenchido, escondendo_numeros, tabuleiro_data, jogo_data
 
-def Click_Button_AI_Solver(window, mouse_position_x, mouse_position_y, click_last_status, click, tabuleiro_data, jogo_data):
+# blank
+# def Click_Button_Blank(window, mouse_position_x, mouse_position_y, click_last_status, click, tabuleiro_preenchido, escondendo_numeros, tabuleiro_data, jogo_data):
+#     x = mouse_position_x
+#     y = mouse_position_y
+#     if x >= 700 and x <= 950 and y >= 200 and y <= 300 and click_last_status == False and click == True:
+#         tabuleiro_preenchido = False
+#         escondendo_numeros = True
+#         tabuleiro_data = Tabuleiro_Blank(tabuleiro_data)
+#         jogo_data = Reiniciando_Tabuleiro_Data(jogo_data)
+#     return tabuleiro_preenchido, escondendo_numeros, tabuleiro_data, jogo_data
+
+def Click_Button_Astar_Solver(window, mouse_position_x, mouse_position_y, click_last_status, click, tabuleiro_data, jogo_data):
     quadrado = 66.7
     ajuste = 50
     x = mouse_position_x
     y = mouse_position_y 
-    if x >= 700 and x <= 950 and y >= 200 and y <= 300 and click_last_status == False and click == True:
+    if x >= 700 and x <= 950 and y >= 350 and y <= 450 and click_last_status == False and click == True:
+        inicio = time.time()
+        
         # Cria uma cópia do tabuleiro com os números escondidos substituídos por zeros
         tabuleiro_para_resolver = Copiar_Tabuleiro_Com_Numeros_Escondidos(tabuleiro_data, jogo_data)
-        # Chama a função de resolver Sudoku
-        solucao = Sudoku_Solver(tabuleiro_para_resolver)
-        if solucao:
-            # Atualiza o jogo com os números resolvidos
-            for i in range(9):
-                for j in range(9):
-                    # Obtém o valor da célula da solução diretamente da propriedade da BoardState
-                    jogo_data[i][j] = solucao.board[i][j]
-                    """
-                    if (i, j) not in tabuleiro_para_resolver:
-                    # Célula não inicial, defina a cor da solução
-                        pg.draw.rect(window, lilas_claro, ((ajuste + j * quadrado, ajuste - 9 + i * quadrado, quadrado, quadrado)))
-                    else:
-                    # Célula inicial, mantenha a cor original
-                        pg.draw.rect(window, branco, ((ajuste + j * quadrado, ajuste - 9 + i * quadrado, quadrado, quadrado)))
-                    Arrumar para ou os quadrados preenchidos ficarem lilas ou os números, essa lógica não funcionou! 
-                    """
+        print("Tabuleiro p resolver: ", tabuleiro_para_resolver)
+        quantidade_zeros = sum(row.count(0) for row in tabuleiro_para_resolver) # para verificar se é um tabuleiro com solução única - mínimo 17 numeros
+        if quantidade_zeros >=64:
+            print("Esse tabuleiro não pode ser resolvido, favor inserir mais números")
+        else:
+            # Chama a função de resolver Sudoku
+            solucao = Sudoku_SolverAstar(tabuleiro_para_resolver)
+            if solucao:
+                # Atualiza o jogo com os números resolvidos
+                for i in range(9): # linha
+                    for j in range(9): # coluna
+                        # Obtém o valor da célula da solução diretamente da propriedade da BoardState
+                        print("Antes: ", jogo_data[i][j], "linha: ", i, "coluna: ", j)
+                        print("Board: ", solucao.board[i][j], i, j)
+                        jogo_data[i][j] = solucao.board[i][j]
+                        # testes
+                        # if jogo_data[i][j] not in tabuleiro_para_resolver[i][j]:
+                        #     palavra = fonte.render(str(jogo_data[i][j]), True, lilas)
+                        #     window.blit(palavra, (ajuste + j * quadrado, ajuste - 9 + i * quadrado))
+                        """
+                        if (i, j) not in tabuleiro_para_resolver:
+                        # Célula não inicial, defina a cor da solução
+                            pg.draw.rect(window, lilas_claro, ((ajuste + j * quadrado, ajuste - 9 + i * quadrado, quadrado, quadrado)))
+                        else:
+                        # Célula inicial, mantenha a cor original
+                            pg.draw.rect(window, branco, ((ajuste + j * quadrado, ajuste - 9 + i * quadrado, quadrado, quadrado)))
+                        Arrumar para ou os quadrados preenchidos ficarem lilas ou os números, essa lógica não funcionou! 
+                        """
+            fim = time.time()
+            tempo = fim -inicio
+            print(f"Tempo de execução: {tempo} segundos")
     return jogo_data
 
 while True:
@@ -345,17 +427,25 @@ while True:
     click_position_x, click_position_y = Celula_Selecionada(window, mouse_position_x, mouse_position_y, click_last_status, click[0], click_position_x, click_position_y)
     Tabuleiro(window)
     Button_Random(window)
-    Button_AI_Solver(window)
+    Button_Blank_Board(window)
+    Button_Astar_Solver(window)
+    # random
     tabuleiro_data, tabuleiro_preenchido = Gabarito_do_Tabuleiro(tabuleiro_data, tabuleiro_preenchido)
     jogo_data, escondendo_numeros = Escondendo_Numeros(tabuleiro_data, jogo_data, escondendo_numeros)
     Escrevendo_Numeros(window, jogo_data)
     numero = Digitando_Numero(numero)
+    # blank jogo_data, numero = Numero_Digitado(window, tabuleiro_data, jogo_data, click_position_x, click_position_y, numero)
+    # random
     jogo_data, numero = Checando_Numero_Digitado(window, tabuleiro_data, jogo_data, click_position_x, click_position_y, numero)
 
+    # Blank
+    # tabuleiro_preenchido, escondendo_numeros, tabuleiro_data, jogo_data = Click_Button_Blank(window, mouse_position_x, mouse_position_y, click_last_status, click[0], tabuleiro_preenchido, escondendo_numeros, tabuleiro_data, jogo_data)
+
+    # random
     tabuleiro_preenchido, escondendo_numeros, tabuleiro_data, jogo_data= Click_Button_Random(mouse_position_x, mouse_position_y, click_last_status, click[0], tabuleiro_preenchido, escondendo_numeros, tabuleiro_data, jogo_data)
 
     # Se o botão AI Solver for clicado
-    jogo_data = Click_Button_AI_Solver(window, mouse_position_x, mouse_position_y, click_last_status, click[0], tabuleiro_data, jogo_data)
+    jogo_data = Click_Button_Astar_Solver(window, mouse_position_x, mouse_position_y, click_last_status, click[0], tabuleiro_data, jogo_data)
 
     # Click Last Status
     if click[0] == True:

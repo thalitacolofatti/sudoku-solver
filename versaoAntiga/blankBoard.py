@@ -1,23 +1,29 @@
 import pygame as pg
 import math
 from solverAstar import Solver, BoardState
+import time
 
 # Cores
 preto = (0, 0, 0)
 vermelho = (255, 64, 131)
-verde = (64, 255, 134)
+verde = (54, 255, 208) 
 lilas_claro = (212, 175, 250)
 lilas = (164, 74, 255)
 branco = (255, 255, 255)
 cinza = (237, 237, 237)
+chumbo = (56, 56, 56)
+
+pg.init()
 
 # Setup da tela do Jogo
 window = pg.display.set_mode((1000, 700))
+pg.display.set_caption('Solucionador Sudoku')
 
 # Inicializando fonte
 pg.font.init()
 # Escolhendo uma fonte e tamanho
 fonte = pg.font.SysFont("Roboto", 50, bold=True)
+fontepp = pg.font.SysFont("Roboto", 12, bold=False)
 
 tabuleiro_data = [['n', 'n', 'n', 'n', 'n', 'n', 'n', 'n', 'n'],
                   ['n', 'n', 'n', 'n', 'n', 'n', 'n', 'n', 'n'],
@@ -51,7 +57,7 @@ def Tabuleiro_Hover(window, mouse_position_x, mouse_position_y):
     ajuste = 50
     x = (math.ceil((mouse_position_x - ajuste) / quadrado) - 1)
     y = (math.ceil((mouse_position_y - ajuste) / quadrado) - 1)
-    pg.draw.rect(window, branco, (0, 0, 1000, 700))
+    pg.draw.rect(window, preto, (0, 0, 1000, 700))
     if x >= 0 and x <= 8 and y >= 0 and y <= 8:
         pg.draw.rect(window, lilas_claro, ((ajuste + x * quadrado, ajuste + y * quadrado, quadrado, quadrado)))
 
@@ -66,25 +72,30 @@ def Celula_Selecionada(window, mouse_position_x, mouse_position_y, click_last_st
     return x, y
 
 def Tabuleiro(window):
-    pg.draw.rect(window, preto, (50, 50, 600, 600), 6)
-    pg.draw.rect(window, preto, (50, 250, 600, 200), 6)
-    pg.draw.rect(window, preto, (250, 50, 200, 600), 6)
-    pg.draw.rect(window, preto, (50, 117, 600, 67), 2)
-    pg.draw.rect(window, preto, (50, 317, 600, 67), 2)
-    pg.draw.rect(window, preto, (50, 517, 600, 67), 2)
-    pg.draw.rect(window, preto, (117, 50, 67, 600), 2)
-    pg.draw.rect(window, preto, (317, 50, 67, 600), 2)
-    pg.draw.rect(window, preto, (517, 50, 67, 600), 2)
+    pg.draw.rect(window, branco, (50, 50, 600, 600), 3)
+    pg.draw.rect(window, branco, (50, 250, 600, 200), 3)
+    pg.draw.rect(window, branco, (250, 50, 200, 600), 3)
+    pg.draw.rect(window, cinza, (50, 117, 600, 67), 1)
+    pg.draw.rect(window, cinza, (50, 317, 600, 67), 1)
+    pg.draw.rect(window, cinza, (50, 517, 600, 67), 1)
+    pg.draw.rect(window, cinza, (117, 50, 67, 600), 1)
+    pg.draw.rect(window, cinza, (317, 50, 67, 600), 1)
+    pg.draw.rect(window, cinza, (517, 50, 67, 600), 1)
 
-def Button_AI_Solver(window):
+def Button_Astar_Solver(window):
     pg.draw.rect(window, lilas, (700, 200, 250, 100))
-    palavra_f = fonte.render('AI Solver', True, preto)
-    window.blit(palavra_f, (725, 225))
+    palavra_f = fonte.render('A* Solver', True, preto)
+    window.blit(palavra_f, (720, 225))
 
 def Button_Blank_Board(window):
-    pg.draw.rect(window, cinza, (700, 350, 250, 100))
+    pg.draw.rect(window, cinza, (700, 50, 250, 100))
     palavra_f = fonte.render('Blank', True, preto)
-    window.blit(palavra_f, (735, 375))
+    window.blit(palavra_f, (760, 75))
+
+def Button_Backtracking(window):
+    pg.draw.rect(window, verde, (700, 350, 250, 100))
+    palavra_f = fonte.render('Backtrack', True, preto)
+    window.blit(palavra_f, (712, 375))
 
 def Quadrante_Selecionado(tabuleiro_data, x, y):
     quadrante = []
@@ -144,7 +155,7 @@ def Escrevendo_Numeros(window, jogo_data):
     for nn in range(9):
         for n in range(9):
             if jogo_data[nn][n] != 'n':
-                palavra = fonte.render(str(jogo_data[nn][n]), True, preto)
+                palavra = fonte.render(str(jogo_data[nn][n]), True, branco)
                 window.blit(palavra, (ajuste + n * quadrado, ajuste - 9 + nn * quadrado))
 
 def Digitando_Numero(numero):
@@ -167,10 +178,8 @@ def Numero_Digitado(window, tabuleiro_data, jogo_data, click_position_x, click_p
         numero = 0
     return jogo_data, numero
 
-def Copiar_Tabuleiro_Com_Numeros_Escondidos(tabuleiro_data, jogo_data):
+def Copiar_Tabuleiro_Com_Numeros_Escondidos(jogo_data):
     copia_tabuleiro = []
-    # print("copiatab.tabul: ", tabuleiro_data)
-    # print("copiatab.jog: ", jogo_data)
     for i in range(9):
         linha = []
         for j in range(9):
@@ -179,33 +188,48 @@ def Copiar_Tabuleiro_Com_Numeros_Escondidos(tabuleiro_data, jogo_data):
             else:
                 linha.append(jogo_data[i][j])  # Manter o número original
         copia_tabuleiro.append(linha)
-    
-    # print("copiatab: ", copia_tabuleiro)
     return copia_tabuleiro
 
-def Sudoku_Solver(copia_tabuleiro):
+def Sudoku_SolverAstar(copia_tabuleiro):
+    # if time.time() - inicio >= temporizador:
+    #     print("Tempo esgotado! Insira mais números.")
+    #     break
     start = BoardState(copia_tabuleiro)
     solver = Solver(start)
     solution = solver.solve()
     solver.validate_solution(solution)
     return solution
 
-def Click_Button_AI_Solver(window, mouse_position_x, mouse_position_y, click_last_status, click, tabuleiro_data, jogo_data):
+def Click_Button_Astar_Solver(window, mouse_position_x, mouse_position_y, click_last_status, click, tabuleiro_data, jogo_data):
     quadrado = 66.7
     ajuste = 50
     x = mouse_position_x
-    y = mouse_position_y 
+    y = mouse_position_y
     if x >= 700 and x <= 950 and y >= 200 and y <= 300 and click_last_status == False and click == True:
         # Cria uma cópia do tabuleiro com os números escondidos substituídos por zeros
-        tabuleiro_para_resolver = Copiar_Tabuleiro_Com_Numeros_Escondidos(tabuleiro_data, jogo_data)
-        # Chama a função de resolver Sudoku
-        solucao = Sudoku_Solver(tabuleiro_para_resolver)
-        if solucao:
-            # Atualiza o jogo com os números resolvidos
-            for i in range(9):
-                for j in range(9):
-                    # Obtém o valor da célula da solução diretamente da propriedade da BoardState
-                    jogo_data[i][j] = solucao.board[i][j]
+        inicio = time.time()
+        tabuleiro_para_resolver = Copiar_Tabuleiro_Com_Numeros_Escondidos(jogo_data)
+
+        quantidade_zeros = sum(row.count(0) for row in tabuleiro_para_resolver)
+
+        if quantidade_zeros >=64:
+            print("Esse tabuleiro não pode ser resolvido, favor inserir mais números")
+            message = fontepp.render('Esse tabuleiro não pode ser resolvido, favor inserir mais números', True, branco)
+            window.blit(message, (712, 550))
+        else:
+            # Chama a função de resolver Sudoku
+            solucao = Sudoku_SolverAstar(tabuleiro_para_resolver)
+
+            if solucao:
+                # Atualiza o jogo com os números resolvidos
+                for i in range(9):
+                    for j in range(9):
+                        # Obtém o valor da célula da solução diretamente da propriedade da BoardState
+                        jogo_data[i][j] = solucao.board[i][j]
+                    
+            fim = time.time()
+            tempo = fim -inicio
+            print(f"Tempo de execução: {tempo} segundos")
     return jogo_data
 
 def Tabuleiro_Blank(tabuleiro_data):
@@ -223,13 +247,11 @@ def Criar_tabuleiro_vazio():
 def Click_Button_Blank(window, mouse_position_x, mouse_position_y, click_last_status, click, tabuleiro_preenchido, escondendo_numeros, tabuleiro_data, jogo_data):
     x = mouse_position_x
     y = mouse_position_y
-    if x >= 700 and x <= 950 and y >= 350 and y <= 450 and click_last_status == False and click == True:
+    if x >= 700 and x <= 950 and y >= 50 and y <= 150 and click_last_status == False and click == True:
         tabuleiro_preenchido = False
         escondendo_numeros = True
         tabuleiro_data = Tabuleiro_Blank(tabuleiro_data)
-
         jogo_data = Reiniciando_Tabuleiro_Data(jogo_data)
-
     return tabuleiro_preenchido, escondendo_numeros, tabuleiro_data, jogo_data
 
 while True:
@@ -252,8 +274,9 @@ while True:
     Tabuleiro_Hover(window, mouse_position_x, mouse_position_y)
     click_position_x, click_position_y = Celula_Selecionada(window, mouse_position_x, mouse_position_y, click_last_status, click[0], click_position_x, click_position_y)
     Tabuleiro(window)
-    Button_AI_Solver(window)
     Button_Blank_Board(window)
+    Button_Astar_Solver(window)
+    # Button_Backtracking(window)
 
     tabuleiro_preenchido, escondendo_numeros, tabuleiro_data, jogo_data = Click_Button_Blank(window, mouse_position_x, mouse_position_y, click_last_status, click[0], tabuleiro_preenchido, escondendo_numeros, tabuleiro_data, jogo_data)
     Escrevendo_Numeros(window, jogo_data)
@@ -261,8 +284,8 @@ while True:
     jogo_data, numero = Numero_Digitado(window, tabuleiro_data, jogo_data, click_position_x, click_position_y, numero)
 
     # Se o botão AI Solver for clicado
-    jogo_data = Click_Button_AI_Solver(window, mouse_position_x, mouse_position_y, click_last_status, click[0], tabuleiro_data, jogo_data)
-    
+    jogo_data = Click_Button_Astar_Solver(window, mouse_position_x, mouse_position_y, click_last_status, click[0], tabuleiro_data, jogo_data)
+
     # Click Last Status
     if click[0] == True:
         click_last_status = True

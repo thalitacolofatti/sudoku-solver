@@ -35,7 +35,7 @@ class Solver(object):
         """
         Esta é uma implementação do algoritmo A-star. O objetivo em
         cada estágio do jogo é selecionar um próximo movimento válido que maximize
-        progresso em direção ã meta em que o jogo sudoku é resolvido.
+        progresso em direção à meta em que o jogo sudoku é resolvido.
         """
         puzzle_state = self.start
         puzzle_state.fast_forward()
@@ -61,16 +61,16 @@ class Solver(object):
         for r, row in enumerate(self.start.board):
             for c, val in enumerate(row):
                 if val and val != solution.board[r][c]:
-                    raise Exception("Initial board has been manipulated!")
+                    raise Exception("Tabuleiro inicial está manipulado!")
 
         for row in solution.board:
             if sum(row) != ROW_TOTAL:
-                raise Exception("Row total for row %d doesn't add up!" % row)
+                raise Exception("O total da linha %d não tem a soma!" % row)
 
         for col in range(9):
             col_total = sum([solution.board[row][col] for row in range(9)])
             if col_total != ROW_TOTAL:
-                raise Exception("Col total for column %d doesn't add up!" % col)
+                raise Exception("O total da coluna %d não tem a soma!" % col)
 
         for row_start in range(0, 9, 3):
             for col_start in range(0, 9, 3):
@@ -79,11 +79,11 @@ class Solver(object):
                     subrows.append(solution.board[row_start + i][col_start:col_start + 3])
                 section_total = sum([sum(row) for row in subrows])
                 if section_total != ROW_TOTAL:
-                    raise Exception("Section total for section at (%d, %d) doesn't add up!" % (row_start, col_start))
+                    raise Exception("O total do quadrante para o quadrante em (%d, %d) não tem a soma!" % (row_start, col_start))
 
 
 class BoardState(object):
-    # Descreve a instancia do tabuleiro. Para estrutura de dados dele, é usada uma matriz.  
+    # Descreve a instancia do tabuleiro. Uma matriz é usada para estrutura de dados.  
     def __init__(self, board):
         self.board = board
         self.f = 0
@@ -174,7 +174,6 @@ class BoardState(object):
         células avaliadas (menor vals possíveis) e criar estados de tabuleiro onde cada
         dos valores possíveis é selecionado.
         """
-
         next_steps = self.get_scored_next_steps()
         if not next_steps.empty():
             pc, row, col, choices = next_steps.get()
@@ -184,7 +183,6 @@ class BoardState(object):
                 child.place_value(row, col, val)
                 child.fast_forward()
                 children.append(child)
-
             return children
         else:
             return []
@@ -199,5 +197,3 @@ class BoardState(object):
         Retorna um identificador de string exclusivo para este tabuleiro
         """
         return ''.join([''.join(map(str, row)) for row in self.board])
-
-
