@@ -9,7 +9,7 @@ O algoritmo A* (A-star) é um algoritmo de busca heurística que utiliza uma fun
 
 O algoritmo explora os estados do tabuleiro de acordo com a prioridade definida pela função de avaliação. Ele utiliza uma fila de prioridade para selecionar o próximo estado a ser explorado, garantindo que o estado mais promissor (aquele com menor distância estimada para a solução) seja explorado primeiro.
 
-No contexto da nossa construção do Sudoku, temos:
+No contexto do desenvolvimento de nosso jogo Sudoku, temos:
 
  - Espaço de Busca: O estado do tabuleiro em qualquer ponto do tempo.
  - Função de Avaliação (f): É a soma do custo do caminho até o momento (g) e a heurística (h). g é implicitamente a profundidade da recursão, e h é o número de células vazias.
@@ -57,7 +57,7 @@ O processo é repetido até que todo o tabuleiro seja preenchido ou as possibili
 
 ______________________
 
-Primeira versão (arquivada na pasta versaoAntiga) foi construída nos arquivos sudoku.py, solucionador.py e blankBoard.py com estruturas abaixo mencionadas
+Primeira versão (arquivada na pasta versaoAntiga) foi implementada nos arquivos sudoku.py, solucionador.py e blankBoard.py com estruturas abaixo mencionadas
 sudoku.py:
 - **tabuleiro_data** e **jogo_data**:  têm matriz bidimensional, com listas bidimensionais, para representar o tabuleiro do jogo de Sudoku.
 - **tabuleiro_data** é usado para armazenar o tabuleiro originalmente gerado.
