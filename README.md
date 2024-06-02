@@ -31,7 +31,7 @@ A versão final foi adaptada usando classes (encapsulamento) para simplificar o 
 **Soluções presentes**:
 
 1. **Heurística ou busca informada**: A função heurística `heuristic` calcula a heurística de um tabuleiro, que nesse caso é o número de células vazias. Esta função guia a busca A* priorizando estados com menos células vazias.
-2. **Fila de Prioridade `heapq`**: Os estados do tabuleiro são armazenados em uma fila de prioridade (`queue`), onde estados com menor valor heurístico são processados primeiro.
+2. **Fila de Prioridade `heapq`**: Os estados do tabuleiro são armazenados em uma fila de prioridade `queue`, onde estados com menor valor heurístico são processados primeiro.
 3. **Estados Visitados**: Utiliza um conjunto `set` para manter o controle dos estados já visitados, evitando repetição de estados.
 4. **Método`is_valid_move`**: verifica se um número pode ser colocado em uma determinada posição do tabuleiro sem violar as regras do Sudoku (sem repetir na linha, coluna ou bloco 3x3)
 5. **Método `solve`**: Este método processa a fila de prioridade e seleciona o estado com o menor valor heurístico, expandindo os estados mais promissores. Verifica se é um estado final (sem células vazias e, se não for, gera novos estados possíveis a partir dele). Para cada estado, tenta colocar um número válido em uma célula vazia e gera novos estados, que são adicionados à fila de prioridade.
