@@ -18,7 +18,7 @@ No contexto do desenvolvimento de nosso jogo Sudoku, temos:
 
 Esses componentes juntos fazem com que a abordagem siga a técnica A*, onde os estados são explorados com base em uma combinação do custo atual e uma estimativa do custo restante, priorizando aqueles que parecem mais promissores.
 
-A versão final foi adaptada usando classes (encapsulamento) para simplificar o código, deixando algumas soluções mais eficientes. Abaixo seguem algumas considerações pertinentes à disciplina e às solicitações da professora:
+A versão final foi adaptada usando classes (encapsulamento) para simplificar o código, permitindo soluções mais eficientes. Abaixo seguem considerações pertinentes à disciplina e às solicitações da professora:
 
 ### astar.py
 
@@ -26,13 +26,13 @@ A versão final foi adaptada usando classes (encapsulamento) para simplificar o 
  - **Lista de Listas (matriz)** para representação do tabuleiro (com cada lista interna representando uma linha do tabuleiro) e seus estados; 
  - **Tuplas** para atribuir as coordenadas das células vazias (linha, coluna);
  - **Fila de prioridade** implementada com a biblioteca `heapq` para gerenciar os estados do tabuleiro com base na heurística (priorizando o menor valor);
- - **Conjunto (`set()`)**  para rastrear as tentativas já visitadas e evitar reprocessamento.
+ - **Conjunto `set()`**  para rastrear as tentativas já visitadas e evitar reprocessamento.
 
 **Soluções presentes**:
 
-1. **Heurística ou busca informada**: A função heurística (`heuristic`) calcula a heurística de um tabuleiro, que nesse caso é o número de células vazias. Esta função guia a busca A* priorizando estados com menos células vazias.
-2. **Fila de Prioridade (`heapq`)**: Os estados do tabuleiro são armazenados em uma fila de prioridade (`queue`), onde estados com menor valor heurístico são processados primeiro.
-3. **Estados Visitados**: Utiliza um conjunto (`set`) para manter o controle dos estados já visitados, evitando repetição de estados.
+1. **Heurística ou busca informada**: A função heurística `heuristic` calcula a heurística de um tabuleiro, que nesse caso é o número de células vazias. Esta função guia a busca A* priorizando estados com menos células vazias.
+2. **Fila de Prioridade `heapq`**: Os estados do tabuleiro são armazenados em uma fila de prioridade (`queue`), onde estados com menor valor heurístico são processados primeiro.
+3. **Estados Visitados**: Utiliza um conjunto `set` para manter o controle dos estados já visitados, evitando repetição de estados.
 4. **Método`is_valid_move`**: verifica se um número pode ser colocado em uma determinada posição do tabuleiro sem violar as regras do Sudoku (sem repetir na linha, coluna ou bloco 3x3)
 5. **Método `solve`**: Este método processa a fila de prioridade e seleciona o estado com o menor valor heurístico, expandindo os estados mais promissores. Verifica se é um estado final (sem células vazias e, se não for, gera novos estados possíveis a partir dele). Para cada estado, tenta colocar um número válido em uma célula vazia e gera novos estados, que são adicionados à fila de prioridade.
 6. **Deepcopy**: Utiliza `deepcopy` para criar novos estados do tabuleiro ao tentar diferentes números.

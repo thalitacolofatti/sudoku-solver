@@ -94,6 +94,60 @@ class Grid:
         self.divisor, self.filled = remove_numbers(self.grid)
         self.occupied_cell_coordinates = self.pre_occupied_cells()
 
+    def clean_to_insert(self) -> None:
+        self.divisor = ""
+        self.filled = 0
+        self.time_solution = 0
+        self.is_user_grid = True
+        self.create_empty_grid()
+    
+    def clean_grid(self) -> None:
+        self.time_solution = 0
+        self.is_solving = False
+        self.is_backtracking = False
+        for y in range(9):
+            for x in range(9):
+                if (y, x) not in self.occupied_cell_coordinates:
+                    self.set_cell(x, y, 0)
+    
+    def solve_a_star(self):
+        self.is_solving = True
+        if self.is_user_grid:
+            self.occupied_cell_coordinates = self.pre_occupied_cells()
+        begin = time.time()
+        solution = SolverAStar(self.grid)
+        if solution.solve():
+            solved_board = solution.get_solution()
+            for y in range(9):
+                for x in range(9):
+                    if self.get_cell(x, y) == 0:
+                        if (y, x) not in self.occupied_cell_coordinates:
+                            self.set_cell(x, y, solved_board[y][x])
+        else:
+            print("sem solução")
+        end = time.time()
+        self.time_solution = end - begin
+        return self.is_solving
+    
+    def backtracking(self):
+        self.is_backtracking = True
+        self.is_solving = False
+        if self.is_user_grid:
+            self.occupied_cell_coordinates = self.pre_occupied_cells()
+        begin = time.time()
+        solver_back = Backtracking(self.grid)
+        if solver_back.solve_backtracking():
+            for y in range(9):
+                for x in range(9):
+                    if self.get_cell(x, y) == 0:
+                        if (y, x) not in self.occupied_cell_coordinates:
+                            self.set_cell(x, y, solver_back.board[y][x])
+        else:
+            print("sem solução")
+        end = time.time()
+        self.time_solution = end - begin
+        return self.is_backtracking
+
     def create_empty_grid(self) -> None:
         """ Inicializa um tabuleiro vazio """
         self.grid = [[0 for _ in range(GRID_SIZE)] for _ in range(GRID_SIZE)]
@@ -129,55 +183,13 @@ class Grid:
         if btn_game == 0:
             self.restart()
         elif btn_game == 1:
-            self.divisor = ""
-            self.filled = 0
-            self.time_solution = 0
-            self.is_user_grid = True
-            self.create_empty_grid()
+            self.clean_to_insert()
         elif btn_game == 2:
-            self.time_solution = 0
-            self.is_solving = False
-            self.is_backtracking = False
-            for y in range(9):
-                for x in range(9):
-                    if (y, x) not in self.occupied_cell_coordinates:
-                        self.set_cell(x, y, 0)
+            self.clean_grid()
         elif btn_game == 3:
-            self.is_solving = True
-            if self.is_user_grid:
-                self.occupied_cell_coordinates = self.pre_occupied_cells()
-            begin = time.time()
-            solution = SolverAStar(self.grid)
-            if solution.solve():
-                solved_board = solution.get_solution()
-                for y in range(9):
-                    for x in range(9):
-                        if self.get_cell(x, y) == 0:
-                            if (y, x) not in self.occupied_cell_coordinates:
-                                self.set_cell(x, y, solved_board[y][x])
-            else:
-                print("sem solução")
-            end = time.time()
-            self.time_solution = end - begin
-            return self.is_solving
+            self.solve_a_star()
         elif btn_game == 4:
-            self.is_backtracking = True
-            self.is_solving = False
-            if self.is_user_grid:
-                self.occupied_cell_coordinates = self.pre_occupied_cells()
-            begin = time.time()
-            solver_back = Backtracking(self.grid)
-            if solver_back.solve_backtracking():
-                for y in range(9):
-                    for x in range(9):
-                        if self.get_cell(x, y) == 0:
-                            if (y, x) not in self.occupied_cell_coordinates:
-                                self.set_cell(x, y, solver_back.board[y][x])
-            else:
-                print("sem solução")
-            end = time.time()
-            self.time_solution = end - begin
-            return self.is_backtracking
+            self.backtracking()
 
     def pre_occupied_cells(self) -> list[tuple]:
         """" Coleta as coordenadas y, x para todas as células inicializadas ou já ocupadas """
