@@ -1,5 +1,12 @@
 O projeto faz parte da Disciplina de Inteligência Artificial na FATEC SP e foi realizado em dupla. 
 O objetivo deste projeto era estudar o desenvolvimento de um solucionador de jogo Sudoku e utilizar um algoritmo com uma ou mais estratégias de busca apresentadas em sala. 
+
+## Video de demonstração
+
+
+https://github.com/thalitacolofatti/sudoku-solver/assets/62973671/945050eb-fa84-4f78-b83e-11fc8186b2be
+
+
 A estratégia escolhida por nós foi a Busca A*.
 
 O algoritmo A* (A-star) é um algoritmo de busca heurística que utiliza uma função de avaliação: 
